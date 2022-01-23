@@ -4,14 +4,22 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 const Task = (props) => {
 
   return (
-    <View style={[styles.item, props.isComplete && styles.completed]}>
+    <View style={[styles.item]}>
       <View style={styles.itemLeft}>
+        <TouchableOpacity onPress={()=>props.completeTask(props.index)} >
+
         <View style={styles.square}></View>
         {props.isComplete && <View style={styles.checkmark}><span>&#10003;</span></View>}
-        <Text style={styles.itemText}>{props.text}</Text>
+        </TouchableOpacity>	
+
+        <Text style={[styles.itemText, props.isComplete && styles.completed]}>{props.text}</Text>
       </View>
-      <View style={styles.circular}></View>
-    </View>
+      <TouchableOpacity onPress={()=>props.deleteTask(props.index)} >
+
+      {/* <View style={styles.circular}></View> */}
+      {<View style={styles.cross}><span>&#10060;</span></View>}
+      </TouchableOpacity>	
+          </View>
   )
 }
 
@@ -62,7 +70,11 @@ const styles = StyleSheet.create({
   },
   checkmark : {
     position: "absolute",
-    margin: 6,
+    marginLeft: 6,
+},
+cross:{
+  fontSize:10,
+  color:"#000",
 }
 
 });

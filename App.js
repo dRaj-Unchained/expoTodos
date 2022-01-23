@@ -4,14 +4,14 @@ import Task from './components/Task';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 // import Swipeout from 'react-native-swipeout';
 // import Swipeable from 'react-native-swipeable';
-import Swipeable from 'react-native-gesture-handler/Swipeable';
-import { RectButton } from 'react-native-gesture-handler';
+// import Swipeable from 'react-native-gesture-handler/Swipeable';
+// import { RectButton } from 'react-native-gesture-handler';
 
 export default function App() {
   const [task, setTask] = useState();
   const [buttomShow, setButtomShow] = useState(true);
   const [taskItems, setTaskItems] = useState([]);
-  const inputEl = useRef(null);
+  // const inputEl = useRef(null);
 
 
   const storeData = async (value) => {
@@ -45,11 +45,11 @@ export default function App() {
     // setTaskItems([{title:"new",isComplete :false}]);
   }, []);
 
-  useEffect(() => {
-    if (inputEl.current) {
-      inputEl.current.focus();
-    }
-  }, [buttomShow]);
+  // useEffect(() => {
+  //   if (inputEl.current) {
+  //     inputEl.current.focus();
+  //   }
+  // }, [buttomShow]);
 
   const handleAddTask = () => {
     Keyboard.dismiss();
@@ -71,10 +71,20 @@ export default function App() {
       setTask(newTask);
     }
   }
-  const deleteNote = () => {
+  // const deleteNote = () => {
 
-  };
+  // };
+  const deleteNote = (index) => {
+    let itemsCopy = [...taskItems];
+    // if (itemsCopy[index].isComplete)
+      itemsCopy.splice(index, 1);
+      // itemsCopy[index].isComplete = false;
+    // else
+      // itemsCopy[index].isComplete = true;
+    setTaskItems(itemsCopy);
 
+    storeData(itemsCopy);
+  }
   const completeTask = (index) => {
     let itemsCopy = [...taskItems];
     if (itemsCopy[index].isComplete)
@@ -87,23 +97,24 @@ export default function App() {
     storeData(itemsCopy);
   }
 
-  const renderLeftActions = (progress, dragX) => {
+  const renderLeftActions = (progress, dragX, index) => {
     const trans = dragX.interpolate({
       inputRange: [0, 0, 0, 0],
       outputRange: [-0, 0, 0, 1],
     });
     return (
-      <RectButton style={{}} onPress={()=>{}}>
-        <Animated.View
-          style={[
-            styles.actionText,styles.leftAction,
-            {
-              transform: [{ translateX: trans }],
-            },
-          ]}>
-            <Text style={styles.addText}>X</Text>
-        </Animated.View>
-      </RectButton>
+      // <RectButton style={{}} onPress={()=>{deleteNote(index)}}>
+      //   <Animated.View
+      //     style={[
+      //       styles.actionText,styles.leftAction,
+      //       {
+      //         transform: [{ translateX: trans }],
+      //       },
+      //     ]}>
+      //       <Text style={styles.addText}>X</Text>
+      //   </Animated.View>
+      // </RectButton>
+      <></>
     );
   };
     return (
@@ -141,11 +152,13 @@ export default function App() {
 
                   return (
 
-                    <Swipeable key={index} renderRightActions={renderLeftActions} renderLeftActions={()=>{}} rightThreshold={100} leftThreshold={200}>
-                      <TouchableOpacity key={index} onPress={() => completeTask(index)}>
-                     <Task text={item.title} isComplete={item.isComplete} />
+                    // <Swipeable key={index} renderRightActions={(a,b)=>renderLeftActions(a,b,index)}
+                    // friction={3}
+                    // rightThreshold={100} leftThreshold={200}>
+                      <TouchableOpacity key={index} >
+                     <Task text={item.title} deleteTask={deleteNote} completeTask={completeTask} index={index} isComplete={item.isComplete} />
                    </TouchableOpacity>
-                    </Swipeable>
+                    // </Swipeable>
                     //   <Swipeable key={index} leftContent={leftContent} rightButtons={rightButtons}>
 
                     // </Swipeable>
@@ -187,7 +200,7 @@ export default function App() {
           {!buttomShow && <TextInput
             // multiline = {true}
             // numberOfLines = {4}
-            style={styles.input} placeholder={'Write a task'} ref={inputEl} onSubmitEditing={() => handleAddTask()} value={task ? task.title : ""} onChangeText={text => handleSetTask(text)} />
+            style={styles.input} placeholder={'Write a task'} onSubmitEditing={() => handleAddTask()}  onChangeText={text => handleSetTask(text)} />
           }{buttomShow && <TouchableOpacity onPress={() => { setButtomShow(false); }}>
             <View style={styles.addWrapper}>
               <Text style={styles.addText}>+</Text>
@@ -246,17 +259,21 @@ export default function App() {
       margin: 20,
     },
     addText: {
-      fontSize: 20
+      fontSize: 20,
+      // color:"#FFF",
+
     },
     leftAction:{
-      width: 50,
-      height: 50,
+      width: 40,
+      height: 40,
       backgroundColor: '#e55a54',
       borderRadius: 60,
       justifyContent: 'center',
       alignItems: 'center',
       borderColor: '#C0C0C0',
       borderWidth: 1,
-
+      margin:7,
+      opacity:1,
+      color:"#FFF",
     }
   }); 
